@@ -29,21 +29,23 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
-	public User create(String name, int age, Date birthday) {
-		User student = new User();
-		student.setName(name);
-		student.setAge(age);
-		student.setBirthday(birthday);
-		return userRepository.save(student);
+	public User create(String name, int sex, Date birthday, String address) {
+		User user = new User();
+		user.setName(name);
+		user.setSex(sex);
+		user.setBirthday(birthday);
+		user.setAddress(address);
+		return userRepository.save(user);
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.PUT)
-	public User modify(int id, String name, int age, Date birthday) {
-		User student = userRepository.findOne(id); 
-		student.setName(name);
-		student.setAge(age);
-		student.setBirthday(birthday);
-		return userRepository.save(student);
+	public User modify(int id, String name, int sex, Date birthday, String address) {
+		User user = userRepository.findOne(id); 
+		user.setName(name);
+		user.setSex(sex);
+		user.setBirthday(birthday);
+		user.setAddress(address);
+		return userRepository.save(user);
 	}
 
 	@RequestMapping(value = "/api/user/{id}", method = RequestMethod.DELETE)
