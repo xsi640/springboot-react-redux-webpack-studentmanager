@@ -9,45 +9,45 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.suyang.domain.Student;
-import com.suyang.repository.StudentRepository;
+import com.suyang.domain.User;
+import com.suyang.repository.UserRepository;
 
 @RestController
-public class StudentController {
+public class UserController {
 
 	@Autowired
-	private StudentRepository studentRepository;
+	private UserRepository userRepository;
 
 	@RequestMapping(value = "/student/{id}", method = RequestMethod.GET)
-	public Student findOne(@PathVariable("id") final int id) {
-		return studentRepository.findOne(id);
+	public User findOne(@PathVariable("id") final int id) {
+		return userRepository.findOne(id);
 	}
 
 	@RequestMapping(value = "/student", method = RequestMethod.GET)
-	public List<Student> findAll() {
-		return studentRepository.findAll();
+	public List<User> findAll() {
+		return userRepository.findAll();
 	}
 
 	@RequestMapping(value = "/student", method = RequestMethod.POST)
-	public Student create(String name, int age, Date birthday) {
-		Student student = new Student();
+	public User create(String name, int age, Date birthday) {
+		User student = new User();
 		student.setName(name);
 		student.setAge(age);
 		student.setBirthday(birthday);
-		return studentRepository.save(student);
+		return userRepository.save(student);
 	}
 
 	@RequestMapping(value = "/student", method = RequestMethod.PUT)
-	public Student modify(int id, String name, int age, Date birthday) {
-		Student student = studentRepository.findOne(id); 
+	public User modify(int id, String name, int age, Date birthday) {
+		User student = userRepository.findOne(id); 
 		student.setName(name);
 		student.setAge(age);
 		student.setBirthday(birthday);
-		return studentRepository.save(student);
+		return userRepository.save(student);
 	}
 
 	@RequestMapping(value = "/student/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable("id") int id) {
-		studentRepository.delete(id);
+		userRepository.delete(id);
 	}
 }

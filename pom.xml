@@ -54,5 +54,14 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<targetPath>resources</targetPath>
+				<includes>
+					<include>static/dist/**</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 </project>
