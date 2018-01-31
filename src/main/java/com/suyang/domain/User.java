@@ -13,7 +13,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private String name;
-	private int age;
+	private int sex;
 	private Date birthday;
 	private String address;
 
@@ -36,12 +36,12 @@ public class User {
 		this.name = name;
 	}
 
-	public int getAge() {
-		return age;
+	public int getSex() {
+		return sex;
 	}
 
-	public void setAge(int age) {
-		this.age = age;
+	public void setSex(int sex) {
+		this.sex = sex;
 	}
 
 	public Date getBirthday() {
