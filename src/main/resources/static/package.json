@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack-dev-server --progress",
+    "build": "cross-env NODE_ENV=production webpack --progress --display-error-details",
     "watch": "cross-env NODE_ENV=development webpack-dev-server --progress --watch",
     "dev": "cross-env NODE_ENV=development webpack-dev-server ."
   },
@@ -21,6 +21,7 @@
     "css-loader": "^0.28.9",
     "extract-text-webpack-plugin": "^3.0.2",
     "file-loader": "^1.1.6",
+    "html-webpack-plugin": "^2.30.1",
     "node-sass": "^4.7.2",
     "postcss-loader": "^2.0.10",
     "sass-loader": "^6.0.6",
