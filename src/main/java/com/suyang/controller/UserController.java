@@ -18,17 +18,17 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 
-	@RequestMapping(value = "/student/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/user/{id}", method = RequestMethod.GET)
 	public User findOne(@PathVariable("id") final int id) {
 		return userRepository.findOne(id);
 	}
 
-	@RequestMapping(value = "/student", method = RequestMethod.GET)
+	@RequestMapping(value = "/api/user", method = RequestMethod.GET)
 	public List<User> findAll() {
 		return userRepository.findAll();
 	}
 
-	@RequestMapping(value = "/student", method = RequestMethod.POST)
+	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
 	public User create(String name, int age, Date birthday) {
 		User student = new User();
 		student.setName(name);
@@ -37,7 +37,7 @@ public class UserController {
 		return userRepository.save(student);
 	}
 
-	@RequestMapping(value = "/student", method = RequestMethod.PUT)
+	@RequestMapping(value = "/api/user", method = RequestMethod.PUT)
 	public User modify(int id, String name, int age, Date birthday) {
 		User student = userRepository.findOne(id); 
 		student.setName(name);
@@ -46,7 +46,7 @@ public class UserController {
 		return userRepository.save(student);
 	}
 
-	@RequestMapping(value = "/student/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/user/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable("id") int id) {
 		userRepository.delete(id);
 	}
