@@ -12,7 +12,7 @@ import UserEditor from './components/users/usereditor'
 
 const middlewares = [];
 middlewares.push(thunk)
-//middlewares.push(logger)
+// middlewares.push(logger)
 
 const store = createStore(reducers, applyMiddleware(...middlewares));
 

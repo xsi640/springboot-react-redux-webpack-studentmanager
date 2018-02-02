@@ -10,7 +10,8 @@ module.exports = {
   ],
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, "dist")
+    path: path.join(__dirname, "dist"),
+    devtoolModuleFilenameTemplate: '[resource-path]?[hash]'
   },
   devServer: {
     contentBase: path.join(__dirname, "dist"),
@@ -23,9 +24,7 @@ module.exports = {
         secure: false,
         prependPath: false
       }
-    },
-    publicPath: 'http://localhost:3000/',
-    historyApiFallback: true
+    }
   },
   resolve: {
     modules: ['src', 'node_modules'],
@@ -99,10 +98,9 @@ module.exports = {
       hash: true,
       filename: './index.html',
       template: './src/index.ejs',
-    }),
-    new webpack.SourceMapDevToolPlugin()
+    })
   ],
   devtool: process.env.NODE_ENV === 'production'
-    ? undefined
-    : 'source-map'
+    ? 'eval'
+    : 'cheap-module-eval-source-map'
 }

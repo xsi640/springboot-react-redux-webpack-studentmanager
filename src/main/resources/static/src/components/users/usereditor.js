@@ -30,7 +30,20 @@ class UserEditor extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('props', nextProps);
+        if (nextProps.user) {
+            console.log(nextProps.user);
+            this.props.onClose(nextProps.user);
+            this.setState({
+                visible: false,
+                loading: false
+            });
+        }
+        if (nextProps.error !== '') {
+            this.setState({
+                loading: false,
+                error: nextProps.error
+            });
+        }
     }
 
     show(user) {
@@ -64,34 +77,38 @@ class UserEditor extends Component {
         this.setState({ [name]: value });
     }
 
-    handleOk() {
+    handleOk(e) {
+        this.setState({ loading: true })
         if (typeof this._user === 'undefined') {
             let { name, sex, birthday, address } = this.state;
+            birthday = moment(birthday).format('YYYY-MM-DD HH:mm:ss');
             this._user = { name, sex, birthday, address };
+            this.props.save(this._user)
         } else {
             let { name, sex, birthday, address } = this.state;
             this._user.name = name;
             this._user.sex = sex;
-            this._user.birthday = birthday;
+            this._user.birthday = moment(birthday).format('YYYY-MM-DD HH:mm:ss');;
             this._user.address = address;
+            this.props.modify(this._user)
         }
-        this.setState({ loading: true, })
-        this.props.save(this._user)
+        e.preventDefault();
     }
 
-    handleCancel() {
+    handleCancel(e) {
         this.setState({ visible: false });
         this.props.onClose();
+        e.preventDefault();
     }
 
     render() {
         let { title, error, visible, loading, name, sex, birthday, address } = this.state;
         return (
             <div>
-                <Modal title={title} visible={visible} closable={false} loading={loading ? loading : false}
+                <Modal title={title} visible={visible} closable={false}
                     footer={[
                         <Button key="back" size="large" onClick={this.handleCancel}>取消</Button>,
-                        <Button key="submit" type="primary" size="large" onClick={this.handleOk}>确定</Button>
+                        <Button key="submit" type="primary" size="large" onClick={this.handleOk} loading={loading}>确定</Button>
                     ]} >
                     <div className='alert'>
                         {

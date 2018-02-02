@@ -1,13 +1,39 @@
 import * as MESSAGE from '../consts/message'
 
-const initialStatus = {};
+const initialStatus = {
+    users: undefined,
+    user: undefined,
+    deleteUserId: undefined,
+    error: undefined,
+};
 
 export const UserReducer = (state = initialStatus, action) => {
     switch (action.type) {
         case MESSAGE.USER_LIST:
-            return { ...state, userList: action.payload, error: action.error }
+            return {
+                ...state,
+                users: action.payload,
+                user: undefined,
+                deleteUserId: undefined,
+                error: action.error
+            }
         case MESSAGE.USER_SAVE:
-            return { ...state, user: action.payload, error: action.error }
+        case MESSAGE.USER_MODIFY:
+            return {
+                ...state,
+                user: action.payload,
+                users: undefined,
+                deleteUserId: undefined,
+                error: action.error
+            }
+        case MESSAGE.USER_DELETE:
+            return {
+                ...state,
+                users: undefined,
+                user: undefined,
+                deleteUserId: action.payload,
+                error: action.error
+            }
         default:
             return state;
     }

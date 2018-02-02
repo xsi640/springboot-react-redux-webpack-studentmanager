@@ -1,25 +1,32 @@
-const headers = { 'Accept': 'application/json', 'Content-Type': 'application/json', };
+const headers = { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', };
 
-export const get = (url, parameters = {}, resolve, reject) => {
-    url += '?';
-    for (let key in parameters) {
-        url += encodeURI(key) + '=' + encodeURI(parameters[key]) + '&';
-    }
-    url += 'd=' + new Date().getTime();
-    fetch(url, { method: 'GET', headers: headers })
+export const Request = (url, method, parameters = {}, resolve, reject) => {
+    if (method === Method.GET) {
+        url += '?';
+        for (let key in parameters) {
+            url += encodeURI(key) + '=' + encodeURI(parameters[key]) + '&';
+        }
+        url += 'd=' + new Date().getTime();
+        fetch(url, { method: 'GET', headers: headers })
         .then(resp => resp.json())
         .then(json => resolve(json))
         .catch(err => reject(err));
+    }else{
+        url += '?d=' + new Date().getTime();
+        let data = '';
+        for (let key in parameters) {
+            data += encodeURI(key) + '=' + encodeURI(parameters[key]) + '&'
+        }
+        fetch(url, { method: method, headers: headers, body: data })
+            .then(resp => resp.json())
+            .then(json => resolve(json))
+            .catch(err => reject(err));
+    }
 }
 
-export const post = (url, parameters = {}, resolve, reject) => {
-    url += '?d=' + new Date().getTime();
-    let formData = new FormData();
-    for (let key in parameters) {
-        formData.append(key, parameters[key]);
-    }
-    fetch(url, { method: 'POST', headers: headers, body: formData })
-        .then(resp => resp.json())
-        .then(json => resolve(json))
-        .catch(err => reject(err));
+export const Method = {
+    GET: 'GET',
+    POST: 'POST',
+    PUT: 'PUT',
+    DELETE: 'DELETE'
 }

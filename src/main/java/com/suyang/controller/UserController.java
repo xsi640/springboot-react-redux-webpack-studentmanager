@@ -1,12 +1,15 @@
 package com.suyang.controller;
 
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.suyang.domain.User;
@@ -24,8 +27,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.GET)
-	public List<User> findAll() {
-		return userRepository.findAll();
+	public Page<User> findAll(@RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
+			@RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
+		Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
+		return userRepository.findAll(pageable);
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
@@ -40,7 +45,7 @@ public class UserController {
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.PUT)
 	public User modify(int id, String name, int sex, Date birthday, String address) {
-		User user = userRepository.findOne(id); 
+		User user = userRepository.findOne(id);
 		user.setName(name);
 		user.setSex(sex);
 		user.setBirthday(birthday);
@@ -49,7 +54,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/api/user/{id}", method = RequestMethod.DELETE)
-	public void delete(@PathVariable("id") int id) {
+	public int delete(@PathVariable("id") int id) {
 		userRepository.delete(id);
+		return id;
 	}
 }
