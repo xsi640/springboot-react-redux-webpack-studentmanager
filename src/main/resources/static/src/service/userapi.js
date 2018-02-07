@@ -10,20 +10,23 @@ export const getUsers = (pageIndex, pageSize, resolve, reject) => {
 
 export const saveUser = (user, resolve, reject) => {
     return Request(API.saveUser, Method.POST, {
-        name: user.name,
+        loginName: user.loginName,
+        realName:user.realName,
+        loginPwd:user.loginPwd,
         sex: user.sex,
         birthday: user.birthday,
-        address: user.address
+        address: user.address,
     }, resolve, reject);
 }
 
 export const modifyUser = (user, resolve, reject) => {
     return Request(API.saveUser, Method.PUT, {
         id: user.id,
-        name: user.name,
+        realName:user.realName,
+        loginPwd:user.loginPwd,
         sex: user.sex,
         birthday: user.birthday,
-        address: user.address
+        address: user.address,
     }, resolve, reject)
 }
 

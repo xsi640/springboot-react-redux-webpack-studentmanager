@@ -8,4 +8,5 @@ import com.suyang.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>  {
 	Page<User> findAll(Pageable pageable);
+	int countByLoginName(String loginName);
 }

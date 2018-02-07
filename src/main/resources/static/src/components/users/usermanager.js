@@ -80,7 +80,7 @@ class UserManager extends Component {
     }
 
     show(user) {
-        this.refs.editor.getWrappedInstance().show(user);
+        this.userEditor.show(user);
     }
 
     componentWillMount() {
@@ -113,8 +113,11 @@ class UserManager extends Component {
 
     render() {
         const columns = [{
-            title: '姓名',
-            dataIndex: 'name',
+            title: '登录名称',
+            dataIndex: 'loginName',
+        }, {
+            title: '真实姓名',
+            dataIndex: 'realName',
         }, {
             title: '性别',
             dataIndex: 'sex',
@@ -151,7 +154,7 @@ class UserManager extends Component {
                     <Button type="primary" disabled={!isSingleSelected} style={{ marginRight: '15px' }} onClick={this.handleModify}>修改</Button>
                     <Button type="primary" disabled={!hasSelected} style={{ marginRight: '15px' }} onClick={this.handleDelete}>删除</Button>
                 </div>
-                <UserEditor ref="editor" onClose={this.handleClose} />
+                <UserEditor wrappedComponentRef={(ref)=>this.userEditor = ref} onClose={this.handleClose} />
                 <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={data} loading={loading} style={{ marginTop: '10px' }} />
                 <Pagination total={total} pageSize={pageSize} current={pageIndex} onChange={this.handlePageChange} onShowSizeChange={this.handlePageSizeChange} showSizeChanger={true} style={{ marginTop: '15px' }} />
             </div>

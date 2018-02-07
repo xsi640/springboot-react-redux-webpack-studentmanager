@@ -1,6 +1,9 @@
+import * as ObjectUtils from '../utils/objectutils'
+
 const headers = { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8', };
 
 export const Request = (url, method, parameters = {}, resolve, reject) => {
+    ObjectUtils.fixObject(parameters);
     if (method === Method.GET) {
         url += '?';
         for (let key in parameters) {
