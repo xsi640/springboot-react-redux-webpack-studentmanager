@@ -20,13 +20,6 @@ class UserEditor extends Component {
             error: '',
             visible: false,
             loading: false,
-            loginName: '',
-            loginPwd: '',
-            loginRePwd: '',
-            realName: '',
-            sex: 0,
-            birthday: '',
-            address: '',
             isModify: false,
         };
 
@@ -35,23 +28,25 @@ class UserEditor extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('componentWillReceiveProps', nextProps)
         if (nextProps.user) {
             this.props.onClose(nextProps.user);
             this.setState({
                 visible: false,
                 loading: false
             });
+            this.props.clear();
         }
         if (nextProps.error !== '') {
             this.setState({
                 loading: false,
                 error: nextProps.error
             });
+            this.props.clear();
         }
     }
 
     show(user) {
+        this.props.form.resetFields();
         this._user = user;
         if (typeof this._user === 'undefined') {
             this.setState({
@@ -60,13 +55,6 @@ class UserEditor extends Component {
                 error: '',
                 visible: true,
                 loading: false,
-                loginName: '',
-                realName: '',
-                loginPwd: '',
-                loginRePwd: '',
-                sex: 0,
-                birthday: moment().add(-18, 'y'),
-                address: '',
             });
         } else {
             this.setState({
@@ -75,21 +63,8 @@ class UserEditor extends Component {
                 error: '',
                 visible: true,
                 loading: false,
-                loginName: this._user.loginName,
-                realName: this._user.realName,
-                sex: this._user.sex,
-                birthday: this._user.birthday,
-                address: this._user.address,
-                loginPwd: '',
-                loginRePwd: '',
             });
         }
-        console.log('show', this._user);
-        // this.props.form.resetFields();
-    }
-
-    handleChange(name, value) {
-        this.setState({ [name]: value });
     }
 
     handleOk(e) {
@@ -98,31 +73,23 @@ class UserEditor extends Component {
             if (!err) {
                 this.setState({ loading: true })
                 if (typeof this._user === 'undefined') {
-                    let { loginName, loginPwd, realName, sex, birthday, address } = this.state;
-                    birthday = moment(birthday).format('YYYY-MM-DD HH:mm:ss');
-                    this._user = { loginName, loginPwd, realName, sex, birthday, address };
-                    this.props.save(this._user)
+                    this.props.save({ ...values, birthday: moment(values.birthday).format('YYYY-MM-DD HH:mm:ss') })
                 } else {
-                    let { loginPwd, realName, sex, birthday, address } = this.state;
-                    this._user.loginPwd = loginPwd;
-                    this._user.realName = realName;
-                    this._user.sex = sex;
-                    this._user.birthday = moment(birthday).format('YYYY-MM-DD HH:mm:ss');
-                    this._user.address = address;
-                    this.props.modify(this._user)
+                    values = { id: this._user.id, ...values, birthday: moment(values.birthday).format('YYYY-MM-DD HH:mm:ss') };
+                    this.props.modify(values);
                 }
             }
         });
     }
 
     handleCancel(e) {
+        e.preventDefault();
         this.setState({ visible: false });
         this.props.onClose();
-        e.preventDefault();
     }
 
     render() {
-        const { title, error, visible, loading, loginName, realName, loginPwd, loginRePwd, sex, birthday, address, isModify } = this.state;
+        const { title, error, visible, loading, isModify } = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 4 },
@@ -161,9 +128,9 @@ class UserEditor extends Component {
                                             message: '请输入登录名。',
                                             whitespace: true
                                         }],
-                                        initialValue: loginName,
+                                        initialValue: this._user ? this._user.loginName : '',
                                     })(
-                                        <Input placeholder="请输入登录名" disabled={isModify} onChange={e => this.handleChange('loginName', e.target.value)} />
+                                        <Input placeholder="请输入登录名" disabled={isModify} />
                                         )
                                 }
                             </FormItem>
@@ -172,7 +139,7 @@ class UserEditor extends Component {
                                     getFieldDecorator('loginPwd', {
                                         rules: pwdRules
                                     })(
-                                        <Input placeholder="请输入登录密码" type="password" onChange={e => this.handleChange('loginPwd', e.target.value)} />
+                                        <Input placeholder="请输入登录密码" type="password" />
                                         )
                                 }
                             </FormItem>
@@ -201,9 +168,9 @@ class UserEditor extends Component {
                                             required: true,
                                             message: '请输入真实姓名。'
                                         }],
-                                        initialValue: realName
+                                        initialValue: this._user ? this._user.realName : ''
                                     })(
-                                        <Input placeholder="请输入真实姓名" onChange={e => this.handleChange('realName', e.target.value)} />
+                                        <Input placeholder="请输入真实姓名" />
                                         )
                                 }
                             </FormItem>
@@ -213,9 +180,9 @@ class UserEditor extends Component {
                                         rules: [{
                                             type: 'number'
                                         }],
-                                        initialValue: sex
+                                        initialValue: this._user ? this._user.sex : 0
                                     })(
-                                        <RadioGroup name="sex" onChange={e => this.handleChange('sex', e.target.value)}>
+                                        <RadioGroup name="sex">
                                             <Radio value={1}>男</Radio>
                                             <Radio value={2}>女</Radio>
                                             <Radio value={0}>保密</Radio>
@@ -226,9 +193,9 @@ class UserEditor extends Component {
                             <FormItem label="生日" {...formItemLayout}>
                                 {
                                     getFieldDecorator('birthday', {
-                                        initialValue: moment(birthday)
+                                        initialValue: this._user ? moment(this._user.birthday) : moment().add(-18, 'y')
                                     })(
-                                        <DatePicker format="YYYY-MM-DD" allowClear={false} onChange={e => this.handleChange('birthday', e.toDate())} />
+                                        <DatePicker format="YYYY-MM-DD" allowClear={false} />
                                         )
                                 }
                             </FormItem>
@@ -236,9 +203,9 @@ class UserEditor extends Component {
                                 {
                                     getFieldDecorator('address', {
                                         rules: [{}],
-                                        initialValue: address
+                                        initialValue: this._user ? this._user.address : ''
                                     })(
-                                        <Input placeholder="请输入地址" onChange={e => this.handleChange('address', e.target.value)} />
+                                        <Input placeholder="请输入地址" />
                                         )
                                 }
                             </FormItem>

@@ -34,6 +34,13 @@ export const UserReducer = (state = initialStatus, action) => {
                 deleteUserId: action.payload,
                 error: action.error
             }
+        case MESSAGE.CLEAR:
+            return {
+                users: undefined,
+                user: undefined,
+                deleteUserId: undefined,
+                error: undefined
+            };
         default:
             return state;
     }

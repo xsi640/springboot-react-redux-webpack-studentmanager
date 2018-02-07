@@ -73,3 +73,11 @@ export const del = (id) => {
         );
     }
 }
+
+export const clear = () => {
+    return (dispatch) => {
+        dispatch({
+            type: MESSAGE.CLEAR
+        })
+    }
+}

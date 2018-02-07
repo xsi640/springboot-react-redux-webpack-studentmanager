@@ -89,6 +89,7 @@ class UserManager extends Component {
     }
 
     handleClose(user) {
+        console.log('handleClose', user);
         if (user) {
             //this.props.list();
             let u = this.state.data.find(item => item.id === user.id);
