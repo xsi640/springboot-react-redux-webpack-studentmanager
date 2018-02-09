@@ -30,14 +30,16 @@ public class UserController {
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.GET)
 	public Page<User> findAll(@RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
-			@RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
+							  @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize) {
 		Pageable pageable = new PageRequest(pageIndex - 1, pageSize);
 		return userRepository.findAll(pageable);
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.POST)
-	public User create(@RequestParam(required = true) String loginName, @RequestParam(required = true) String loginPwd,
-			@RequestParam(required = true) String realName, int sex, Date birthday, String address) {
+	public User create(@RequestParam(required = true) String loginName, 
+						@RequestParam(required = true) String loginPwd,
+						@RequestParam(required = true) String realName, 
+						int sex, Date birthday, String address) {
 		User user = new User();
 		user.setLoginName(loginName);
 		user.setRealName(realName);
@@ -54,8 +56,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/api/user", method = RequestMethod.PUT)
-	public User modify(@RequestParam(required = true) int id, String loginPwd,
-			@RequestParam(required = true) String realName, int sex, Date birthday, String address) {
+	public User modify(@RequestParam(required = true) int id, 
+						String loginPwd,
+						@RequestParam(required = true) String realName, 
+						int sex, Date birthday, String address) {
 		User user = userRepository.findOne(id);
 		if (user == null)
 			return null;

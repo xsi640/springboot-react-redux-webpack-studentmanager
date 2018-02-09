@@ -59,6 +59,7 @@ export const del = (id) => {
     return (dispatch) => {
         UserAPI.deleteUser(id,
             json => {
+                console.log(json)
                 dispatch({
                     type: MESSAGE.USER_DELETE,
                     payload: id
@@ -71,6 +72,24 @@ export const del = (id) => {
                 });
             }
         );
+    }
+}
+
+export const checkLoginName = (name) => {
+    return (dispatch) => {
+        UserAPI.checkUser(name,
+            json => {
+                dispatch({
+                    type: MESSAGE.USER_CHECK_NAME,
+                    payload: json
+                });
+            },
+            json => {
+                dispatch({
+                    type: MESSAGE.USER_CHECK_NAME,
+                    error: err
+                });
+            })
     }
 }
 

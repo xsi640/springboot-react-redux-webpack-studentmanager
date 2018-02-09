@@ -7,6 +7,7 @@ const FormItem = Form.Item
 const RadioGroup = Radio.Group
 import PropTypes from 'prop-types'
 import './usereditor.scss'
+import { checkUserName } from '../../consts/api';
 
 class UserEditor extends Component {
 
@@ -25,10 +26,12 @@ class UserEditor extends Component {
 
         this.handleOk = this.handleOk.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
+        this.handleSaveUser = this.handleSaveUser.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.user) {
+        console.log('nextProps', nextProps)
+        if (typeof nextProps.user !== 'undefined') {
             this.props.onClose(nextProps.user);
             this.setState({
                 visible: false,
@@ -43,6 +46,20 @@ class UserEditor extends Component {
             });
             this.props.clear();
         }
+        if (typeof nextProps.checkName !== 'undefined') {
+            this.setState({
+                loading: false
+            });
+            if(nextProps.checkName === true){
+                this.props.form.setFields({
+                    loginName:{
+                        errors:[new Error('用户名重复。')]
+                    }
+                })
+            }else{
+                this.handleSaveUser();
+            }
+        }
     }
 
     show(user) {
@@ -55,6 +72,7 @@ class UserEditor extends Component {
                 error: '',
                 visible: true,
                 loading: false,
+                checkNameStatus: undefined,
             });
         } else {
             this.setState({
@@ -63,6 +81,7 @@ class UserEditor extends Component {
                 error: '',
                 visible: true,
                 loading: false,
+                checkNameStatus: undefined,
             });
         }
     }
@@ -71,15 +90,22 @@ class UserEditor extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                this.setState({ loading: true })
-                if (typeof this._user === 'undefined') {
-                    this.props.save({ ...values, birthday: moment(values.birthday).format('YYYY-MM-DD HH:mm:ss') })
-                } else {
+                if(typeof this._user === 'undefined'){
+                    this.values = values;
+                    this.props.checkLoginName(values.loginName);
+                }else{
                     values = { id: this._user.id, ...values, birthday: moment(values.birthday).format('YYYY-MM-DD HH:mm:ss') };
                     this.props.modify(values);
                 }
             }
         });
+    }
+
+    handleSaveUser(){
+        this.setState({ loading: true })
+        if (typeof this._user === 'undefined') {
+            this.props.save({ ...this.values, birthday: moment(this.values.birthday).format('YYYY-MM-DD HH:mm:ss') })
+        }
     }
 
     handleCancel(e) {
@@ -89,7 +115,7 @@ class UserEditor extends Component {
     }
 
     render() {
-        const { title, error, visible, loading, isModify } = this.state;
+        const { title, error, visible, loading, isModify, checkNameStatus } = this.state;
         const { getFieldDecorator } = this.props.form;
         const formItemLayout = {
             labelCol: { span: 4 },
@@ -125,8 +151,12 @@ class UserEditor extends Component {
                                     getFieldDecorator('loginName', {
                                         rules: [{
                                             required: true,
-                                            message: '请输入登录名。',
-                                            whitespace: true
+                                            message: '请输入登录名',
+                                            whitespace: true,
+                                        }, {
+                                            min: 3,
+                                            max: 16,
+                                            message: '用户名称为3~16个字符'
                                         }],
                                         initialValue: this._user ? this._user.loginName : '',
                                     })(
