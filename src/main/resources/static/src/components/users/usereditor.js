@@ -37,29 +37,28 @@ class UserEditor extends Component {
                 visible: false,
                 loading: false
             });
-            this.props.clear();
         }
         if (nextProps.error !== '') {
             this.setState({
                 loading: false,
                 error: nextProps.error
             });
-            this.props.clear();
         }
         if (typeof nextProps.checkName !== 'undefined') {
             this.setState({
                 loading: false
             });
-            if(nextProps.checkName === true){
+            if (nextProps.checkName === true) {
                 this.props.form.setFields({
-                    loginName:{
-                        errors:[new Error('用户名重复。')]
+                    loginName: {
+                        errors: [new Error('用户名重复。')]
                     }
                 })
-            }else{
+            } else {
                 this.handleSaveUser();
             }
         }
+        this.props.clear();
     }
 
     show(user) {
@@ -90,10 +89,10 @@ class UserEditor extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
             if (!err) {
-                if(typeof this._user === 'undefined'){
+                if (typeof this._user === 'undefined') {
                     this.values = values;
                     this.props.checkLoginName(values.loginName);
-                }else{
+                } else {
                     values = { id: this._user.id, ...values, birthday: moment(values.birthday).format('YYYY-MM-DD HH:mm:ss') };
                     this.props.modify(values);
                 }
@@ -101,7 +100,7 @@ class UserEditor extends Component {
         });
     }
 
-    handleSaveUser(){
+    handleSaveUser() {
         this.setState({ loading: true })
         if (typeof this._user === 'undefined') {
             this.props.save({ ...this.values, birthday: moment(this.values.birthday).format('YYYY-MM-DD HH:mm:ss') })
